@@ -1,14 +1,18 @@
 import Icons from "./Icons";
 
-export default function Toolbar({ addNote, addFavorite, deleteNote, activeNoteId }) {
+export default function Toolbar({ addNote, deleteNote, activeNoteId, setActiveNoteId, notes, toggleFavorite, showIcons }) {
 
     return (
         <div id="toolbar">
             <Icons
                 addNote={addNote}
-                addFavorite={addFavorite}
                 deleteNote={deleteNote}
-                activeNote={activeNoteId} />
+                activeNoteId={activeNoteId}
+                setActiveNoteId={setActiveNoteId}
+                notes={notes}
+                toggleFavorite={toggleFavorite}
+                showIcons={showIcons}
+            />
         </div>
     )
 }

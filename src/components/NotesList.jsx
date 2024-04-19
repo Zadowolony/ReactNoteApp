@@ -1,6 +1,10 @@
 import { useState } from "react"
 
-export default function NotesList({ notes, currentNote, favorites, showFavorites, setShowFavorites, setActiveNoteId, activeNoteId }) {
+export default function NotesList({ notes, setActiveNoteId, activeNoteId, showFavorites, setFilterNote }) {
+
+
+    const filteredNotes = showFavorites ? notes.filter(note => note.favorite) : notes;
+
 
 
 
@@ -21,14 +25,16 @@ export default function NotesList({ notes, currentNote, favorites, showFavorites
                         <button
                             type="button"
                             className={`btn btn-default ${!showFavorites ? 'active' : ''}`}
-                            onClick={() => setShowFavorites(false)}>All notes</button>
+                            onClick={() => setFilterNote('all')}
+                        >All notes</button>
                     </div>
 
                     <div className="btn-group">
                         <button
                             type="button"
                             className={`btn btn-default ${showFavorites ? 'active' : ''}`}
-                            onClick={() => setShowFavorites(true)}
+                            onClick={() => setFilterNote('favorites')}
+
                         >Favorites</button>
                     </div>
                 </div>
@@ -38,32 +44,26 @@ export default function NotesList({ notes, currentNote, favorites, showFavorites
 
                 <div className="list-group">
 
-                    {showFavorites ? (
-                        favorites.map((favorite, index) => (
-                            <button
-                                key={favorite.id}
-                                type="button"
-                                className={`list-group-item ${activeNoteId === favorite.id ? 'active' : ''}`}
-                                onClick={() => handleNoteClick(favorite.id)}>
-                                <h4 className="list-group-item-heading">
-                                    {favorite.favorite}
-                                </h4>
-                            </button>
-                        ))
-                    ) : (
-                        notes.map((note, index) => (
-                            <button
-                                key={note.id}
-                                type="button"
-                                className={`list-group-item ${activeNoteId === note.id ? 'active' : ''}`}
-                                onClick={() => handleNoteClick(note.id)}>
-                                <h4 className="list-group-item-heading">
-                                    {currentNote}
-                                </h4>
-                            </button>
-                        ))
-                    )}
 
+                    {filteredNotes.map(note => (
+                        <button
+                            key={note.id}
+                            type="button"
+                            className={`list-group-item ${activeNoteId === note.id ? 'active' : ''}`}
+                            onClick={() => handleNoteClick(note.id)}>
+
+                            {note.note === '' ? (
+                                <h4><i>Nieuw Notitie</i></h4>
+                            ) : (
+                                <h4 className="list-group-item-heading">
+                                    {note.note.length > 29 ? note.note.slice(0, 29) + '...' : note.note}
+                                </h4>
+                            )
+                            }
+
+                        </button>
+                    ))
+                    }
 
 
 

@@ -11,21 +11,32 @@ function App() {
 
   const [notes, setNotes] = useState([]);
 
-  const [currentNote, setCurrentNote] = useState('')
-
-  const [favorites, setFavorites] = useState([]);
-
-  const [showFavorites, setShowFavorites] = useState(false);
-
   const [activeNoteId, setActiveNoteId] = useState(null);
 
+  // filternote zou nu met simpel true of false kunnen omdat wij maar twee knoppen hebben. maar eens je derde knop hebt moet je met namen doen.
+  const [filterNote, setFilterNote] = useState('all');
 
 
-  const handleAddNotes = (note) => {
+
+
+
+
+  const handleAddNotes = () => {
     setNotes([
-      { id: crypto.randomUUID(), note }, ...notes
+      { id: crypto.randomUUID(), note: '', favorite: false }, ...notes
     ])
   }
+
+  const toggleFavorite = (id) => {
+
+    setNotes(notes.map(note => {
+      if (note.id === id) {
+        return { ...note, favorite: !note.favorite };
+      }
+      return note;
+    }))
+  }
+
 
   const handleEditNote = (id, newNote) => {
 
@@ -38,24 +49,12 @@ function App() {
     }))
   }
 
-  const handleAddFavorites = (noteId) => {
-
-    const noteToAdd = notes.find(note => note.id === noteId);
-    if (noteToAdd && !favorites.some(fav => fav.id === noteId)) {
-      setFavorites([...favorites, { ...noteToAdd }]);
-    }
-
-  }
 
   const deleteNote = (id) => {
 
     setNotes(notes.filter((note) => note.id != id));
 
-
-
   }
-
-
 
 
 
@@ -68,20 +67,27 @@ function App() {
 
       <Toolbar
         addNote={handleAddNotes}
-        addFavorite={handleAddFavorites}
         deleteNote={deleteNote}
         activeNoteId={activeNoteId}
+        setActiveNoteId={setActiveNoteId}
+        toggleFavorite={toggleFavorite}
+
+        notes={notes}
+        showIcons={notes.length > 0}
+
+
+
+
       />
 
       <NotesList
         notes={notes}
-        currentNote={currentNote}
-        onEditNote={handleEditNote}
-        favorites={favorites}
-        showFavorites={showFavorites}
-        setShowFavorites={setShowFavorites}
         setActiveNoteId={setActiveNoteId}
         activeNoteId={activeNoteId}
+
+        filterNote={filterNote}
+        setFilterNote={setFilterNote}
+        showFavorites={filterNote === 'favorites'}
 
 
 
@@ -89,8 +95,8 @@ function App() {
 
       <NoteEditor
         notes={notes}
-        currentNote={currentNote}
-        editCurrentNote={setCurrentNote}
+
+
         activeNoteId={activeNoteId}
         handleEditNote={handleEditNote} />
     </div >
